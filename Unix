@@ -1,0 +1,39 @@
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 FISI2526-MetCompCompl-202320 % l
+s
+Clase_1         Clase_2         README.md       Taller_1
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 FISI2526-MetCompCompl-202320 % cd Clase_1 
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 Clase_1 % ls
+Clase 1.pdf                             riesgos_minerales.txt
+Standard Model of Particle Physics
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 Clase_1 % cd Standard\ Model\ of\ Particle\ Physics
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 Standard Model of Particle Physics % awk -F "," '$19 == "SLAC"{print}' standard_model.csv 
+1,Up,u,Fermion,Quark,1,2400000,2,0.5,,,TRUE,TRUE,TRUE,TRUE,1,1,1968,SLAC,Images\Up.jpg,http://en.wikipedia.org/wiki/Up_quark
+2,Down,d,Fermion,Quark,1,4800000,2,0.5,,,TRUE,TRUE,TRUE,TRUE,2,1,1968,SLAC,Images\Down.jpg,http://en.wikipedia.org/wiki/Down_quark
+4,Strange,s,Fermion,Quark,2,104000000,-1,0.5,,,TRUE,TRUE,TRUE,TRUE,2,2,1968,SLAC,Images\Strange.jpg,http://en.wikipedia.org/wiki/Strange_quark
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 Standard Model of Particle Physics % awk -F "," '$19 == "SLAC" && $2 =="Up"{print}' standard_model.csv
+1,Up,u,Fermion,Quark,1,2400000,2,0.5,,,TRUE,TRUE,TRUE,TRUE,1,1,1968,SLAC,Images\Up.jpg,http://en.wikipedia.org/wiki/Up_quark
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 Standard Model of Particle Physics % awk -F "," '$19 ~/SLAC5/{print}' standard_model.csv
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 Standard Model of Particle Physics % awk -F "," '$19 ~/SLAC/{print $2}' standard_model.csv
+Up
+Down
+Charm
+Strange
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 Standard Model of Particle Physics % awk -F "," '$19 ~/SLAC/{print $19}' standard_model.csv
+SLAC
+SLAC
+SLAC / BNL
+SLAC
+(base) juanpablomendozaarias@MacBook-Air-de-Juan-104 Standard Model of Particle Physics % 
+
+
+
+
+
+
+
+
+
+
+
+
+

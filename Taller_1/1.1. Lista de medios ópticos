@@ -1,0 +1,4 @@
+awk -F"," 'NR>1{print $3}' indices_refraccion.csv >> materiales.txt
+#debe estar dentro de la carpeta del taller
+#ej. cd /Users/juanpablomendozaarias/Library/Mobile\ Documents/com~apple~CloudDocs/Universidad/Tercer\ Semestre/Métodos\ Computacionales/MetCompCompl-202320\ {MENDOZA}\ {LIÉVANO}./Taller_1
+#ej. cd MetCompCompl-202320\ {MENDOZA}\ {LIÉVANO}./Taller_1
