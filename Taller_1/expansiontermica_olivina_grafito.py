@@ -18,6 +18,7 @@ objeto = object(fullpath)
 
 try:
     promedio_coeficiente, error_global, fig = coef(objeto)
+    fig.savefig('Graficas V(T) alpha(T)')
     print(promedio_coeficiente)
     plt.show()
 except ValueError:

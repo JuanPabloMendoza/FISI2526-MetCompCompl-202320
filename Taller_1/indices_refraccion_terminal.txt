@@ -1,4 +1,17 @@
+#1
+
 awk -F"," 'NR>1{print $3}' indices_refraccion.csv >> materiales.txt
-#debe estar dentro de la carpeta del taller
+#debe ubicarse dentro de la carpeta del taller
 #ej. cd /Users/juanpablomendozaarias/Library/Mobile\ Documents/com~apple~CloudDocs/Universidad/Tercer\ Semestre/Métodos\ Computacionales/MetCompCompl-202320\ {MENDOZA}\ {LIÉVANO}./Taller_1
 #ej. cd MetCompCompl-202320\ {MENDOZA}\ {LIÉVANO}./Taller_1
+
+
+#2
+
+while IFS="," read col1 col2 col3 col4;
+do
+link=$(echo "$col4") 
+mkdir -p "$col1"
+wget -O "$col1/$col3.yml" $link
+done < indices_refraccion.csv
+rm -r Categoría/

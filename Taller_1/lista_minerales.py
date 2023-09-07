@@ -31,17 +31,10 @@ def promedio_densidad(minerales):
         suma += mineral.densidad()
     return suma/len(minerales)
 
-""" 
 
-for mineral in lista_minerales:
-    attrs = vars(mineral)
-    mineral.color_()
-    print(', '.join("%s: %s" % item for item in attrs.items()))
     
 print(numero_silicatos(lista_minerales))
 print(promedio_densidad(lista_minerales))
 
-mineral = lista_minerales[1]
-mineral.color_()
- """
+
 
