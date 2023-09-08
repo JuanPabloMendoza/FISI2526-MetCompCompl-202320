@@ -12,14 +12,17 @@ def coef(object):
 
 fullpath = os.path.abspath('Taller_1/graphite_mceligot_2016.csv')
 fullpath2 = os.path.abspath('Taller_1/olivine_angel_2017.csv')
-objeto = object(fullpath)
+objeto = [object(fullpath), 'Grafito']
+objeto2 = [object(fullpath2), 'Olivina']
+objetos = [objeto, objeto2]
 
 
 
 try:
-    promedio_coeficiente, error_global, fig = coef(objeto)
-    fig.savefig('Graficas V(T) alpha(T)')
-    print(promedio_coeficiente)
-    plt.show()
+    for objeto_ in objetos:
+        promedio_coeficiente, error_global, fig = coef(objeto_[0])
+        fig.savefig(f'Graficas V(T) alpha(T) {objeto_[1]}')
+        print(promedio_coeficiente)
+        plt.show()
 except ValueError:
     print('No se tienen datos para esta temperatura')
