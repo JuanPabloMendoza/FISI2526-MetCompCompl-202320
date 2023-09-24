@@ -7,10 +7,12 @@ y = sym.Symbol('y',real=True)
 #Cantidades estandar
 N_a = 6.0225*(10**23)
 k = 1.3805*(10**(-23))
+masa_helio = 0.004
+masa_nitrogeno = 0.028
+masa_xenon_132 = 0.1319041535
 
 #GAUSS-LAGUERRE
 def GetLaguerreRecursive(n,x):
-
     if n==0:
         poly = sym.Pow(1,1)
     elif n==1:
@@ -19,8 +21,8 @@ def GetLaguerreRecursive(n,x):
         poly = ((2*n-1-x)*GetLaguerreRecursive(n-1,x)-(n-1)*GetLaguerreRecursive(n-2,x))/n
    
     return sym.simplify(poly)
-
-print(GetLaguerreRecursive(5,x))
+n=4
+print(f'Ejercicio 3.1.1\n Polinomio de laguerre de grado {n}: {GetLaguerreRecursive(n,x)}\n')
 
 #RAICES
 
@@ -86,11 +88,10 @@ def GetAllRootsGLag(n):
     Roots = GetRootsGLag(poly,Dpoly,xn)
     
     return Roots
-
-print(GetAllRootsGLag(4))
+n=4
+print(f'Ejercicio 3.1.2\n Raices del polinomio de Laguerre de grado {n}: {GetAllRootsGLag(n)}\n')
 
 def GetWeightsGLag(n):
-
     Roots = GetAllRootsGLag(n)
 
     
@@ -107,7 +108,9 @@ def GetWeightsGLag(n):
     
     return Weights
 
-print(GetWeightsGLag(4))
+n=4
+print(f'Ejercicio 3.1.3\n Pesos del polinomio de Laguerre de grado {n}: {GetWeightsGLag(n)}\n')
+
 
 #INTEGRAL 0 A INF
 
@@ -123,72 +126,132 @@ def Integral_GL(funcion, n):
 
 
 def Integral_GL_corta(funcion, n):
+    # Más rápida. Usa los pesos y raices dados por numpy
     def funcion_corregida(x):
         return funcion(x) * np.exp(x)
-    n = 80
     raices,pesos = np.polynomial.laguerre.laggauss(n)
     suma = 0
     for i in range(n):
         suma += pesos[i] * funcion_corregida(raices[i])
     return suma
 
-#EJEMPLO
-def funcion(x):
-    return np.exp(-x)*np.cos(x)
+#EJERCICIOS 3.3.
 
-#print(Integral_GL_corta(funcion, 10))
-
-#EJERCICIOS PRACTICOS
-
-#2
-
+#1
 def P(v, T=300, m=0.001, R=k):
     M = m/N_a
     return 4 * np.pi * (( M / ( 2 * np.pi * R * T ))**(3/2)) * (v**2) * np.exp(-(M * (v**2))/( 2 * R * T))
 
-v = np.linspace(0, 1000, 10000)
-temperaturas = np.array([50, 100, 189.15, 300, 500, 600, 1000, 2500, 5000, 10000], dtype='float64')
-masa_helio = 0.004
-masa_nitrogeno = 0.028
+def P_modificada(x):
+    return (2/np.sqrt(np.pi))*np.sqrt(x)*np.exp(-x)
 
-""" for temp in temperaturas:
-    plt.plot(v, P(v, temp, masa_helio), label = f'T = {temp} K')
+print(f'Ejercicio 3.3.1\nEl valor de la integral de la funcion de distribucion de velocidades entre 0 e infinito, realizando la sustitucion u=mv^2/2kT es {Integral_GL_corta(P_modificada, 15)}\n')
+
+#2
+
+v = np.linspace(0, 10000, 10000)
+temperaturas = np.array([50, 100, 200, 300, 500, 600, 1000, 2500, 5000, 10000], dtype='float64')
+Masa_a_utilizar = masa_helio
+
+def plot_distrib_por_temp(funcion_distrib, temperaturas, m):
+    for temp in temperaturas:
+        plt.plot(v, 100*funcion_distrib(v, temp, m), label = f'T = {temp} K')
+    plt.legend()
+    plt.xlabel("Velocidad (m/s)")
+    plt.ylabel("Probabilidad porcentual")
+    plt.title(f'Ejercicio 3.3.2 \nMasa molar: {m} kg')
+    plt.show()
+
+plot_distrib_por_temp(P, temperaturas, Masa_a_utilizar)
+
+""" plt.plot(v, P(v, 298.15, masa_xenon_132), label = f'Xenon-132\nT = {298.15} K')
 plt.legend()
 plt.show() """
 
-plt.plot(v, P(v, 298.15, masa_helio), label = f'T = {298.15} K')
-plt.legend()
-plt.show()
+print(f'Ejercicio 3.3.2\nR2: A medida que aumenta la temperatura se puede observar que la velocidad más frecuente o probable aumenta también.')
+print(f'Esto puede deducirse de la ecuacion de velocidad promedio, la cual tiene una relacion creciente con la temperatura')
+print(f'También, a medida que la temperatura aumenta, la energía cinética también, por lo que la velocidad promedio de las partículas se incrementa.\n')
 
+
+#3
+temperaturas = np.array([50, 100, 200, 300, 500, 700, 1000, 2500, 5000, 10000], dtype='float64')
+Masa_a_utilizar = masa_nitrogeno
+velocidades_promedio = np.array([])
+velocidades_promedio_reales = np.array([])
 
 def velocidad_promedio(m, T):
-    def v_pv(v):
-        return v*P(v, T, m)
-    velocidad_promedio = Integral_GL(v_pv, 10)
-    return velocidad_promedio
+    M = m/N_a
+    def v_pv(x):
+        return 4*np.sqrt((k*T)/(2*np.pi*M))*x*np.exp(-x)
+    velocidad_promedio_ = Integral_GL_corta(v_pv, 15)
+    return velocidad_promedio_
 
 def velocidad_promedio_real(m, T):
     M = m/N_a
     return np.sqrt((8*k*T)/((np.pi)*M))
 
-print(velocidad_promedio(masa_nitrogeno, 300))
-print(velocidad_promedio_real(masa_nitrogeno, 300))
+for temperatura in temperaturas:
+    velocidades_promedio = np.append(velocidades_promedio, velocidad_promedio(Masa_a_utilizar, temperatura))
+    velocidades_promedio_reales = np.append(velocidades_promedio_reales, velocidad_promedio_real(Masa_a_utilizar, temperatura))
+
+def imprimir_velocidades_promedio(m, v,T):
+    print(f'\nEjercicio 3.3.3\nLas velocidades promedio para las siguientes temperaturas con una masa molar de {m} kg son:')
+    for temperatura in T:
+        i=np.where(T==temperatura)[0][0]
+        print(f'T: {temperatura} K --- v={np.round(v[i],4)} m/s') 
+        
+imprimir_velocidades_promedio(Masa_a_utilizar, velocidades_promedio, temperaturas)
+
+plt.plot(temperaturas, velocidades_promedio, color = 'blue', label = 'Estimado con Gauss-Laguerre', marker = '.')
+plt.plot(temperaturas, velocidades_promedio_reales, color =  'green', label = 'Valor real')
+plt.legend()
+#plt.xscale('log')
+plt.xlabel("Temperatura (K)")
+plt.ylabel("Velocidad promedio (m/s)")
+plt.title(f'Ejercicio 3.3.3\n')
+plt.show()
 
 
-print(f'R2: A medida que aumenta la temperatura se puede observar que la velocidad más frecuente o probable aumenta también.')
-print(f'Esto puede deducirse de la ecuacion de velocidad promedio, la cual tiene una relacion creciente con la temperatura')
-print(f'También, dado que la temperatura es una medida de la energía cinética del sistema. Por esto, a medida que la temperatura aumenta, la energía cinética también, por lo que la velocidad promedio de las partículas se incrementa.')
-
-
-#3
+#4
 temperaturas = np.array([50, 100, 200, 300, 500, 700, 1000, 2500, 5000, 10000], dtype='float64')
-velocidad_promedio = np.array([])
+Masa_a_utilizar = masa_nitrogeno
+velocidades_media_cuadratica = np.array([])
+velocidades_media_cuadratica_reales = np.array([])
 
-""" for temperatura in temperaturas:
-    def v_pv(v):
-        return P(v, temperatura)
-    velocidad_promedio = np.append(velocidad_promedio, Integral_GL(v_pv, 5))
-print(velocidad_promedio) """
+def velocidad_media_cuadratica(m, T):
+    M = m/N_a
+    def v2_pv(x):
+        return 4*(k*T/(np.sqrt(np.pi)*M))*x**(1.5)*np.exp(-x)
+    velocidad_media_cuadratica_ = Integral_GL_corta(v2_pv, 15)
+    return np.sqrt(velocidad_media_cuadratica_)
+
+def velocidad_media_cuadratica_real(m, T):
+    M = m/N_a
+    return np.sqrt((3*k*T)/(M))
+
+for temperatura in temperaturas:
+    velocidades_media_cuadratica = np.append(velocidades_media_cuadratica, velocidad_media_cuadratica(Masa_a_utilizar, temperatura))
+    velocidades_media_cuadratica_reales = np.append(velocidades_media_cuadratica_reales, velocidad_media_cuadratica_real(Masa_a_utilizar, temperatura))
+
+def imprimir_velocidades_media_cuadratica(m, v,T):
+    print(f'\nEjercicio 3.3.4\nLas velocidades medias cuadráticas para las siguientes temperaturas con una masa molar de {m} kg son:')
+    for temperatura in T:
+        i=np.where(T==temperatura)[0][0]
+        print(f'T: {temperatura} K --- v={np.round(v[i],4)} m/s') 
+        
+imprimir_velocidades_media_cuadratica(Masa_a_utilizar, velocidades_media_cuadratica, temperaturas)
+
+plt.plot(temperaturas, velocidades_media_cuadratica, color = 'blue', label = 'Estimado con Gauss-Laguerre', marker = '.')
+plt.plot(temperaturas, velocidades_media_cuadratica_reales, color =  'green', label = 'Valor real')
+plt.legend()
+plt.xlabel("Temperatura (K)")
+#plt.xscale('log')
+plt.ylabel("Velocidad media cuadrática (m/s)")
+plt.title(f'Ejercicio 3.3.4')
+plt.show()
+
+#5
+print(f'\nEjercicio 3.3.5 en pdf adjunto')
     
 
 

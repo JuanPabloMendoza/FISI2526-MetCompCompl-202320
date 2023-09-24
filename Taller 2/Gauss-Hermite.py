@@ -14,8 +14,8 @@ def GetHermiteRecursive(n,x):
     else:
         poly = 2*x*GetHermiteRecursive(n-1, x) - sym.diff(GetHermiteRecursive(n-1, x), x, 1)
     return sym.simplify(poly)
-
-print(GetHermiteRecursive(3,x))
+n=4
+print(f'\nEjercicio 3.2.1\nPolinomio de Hermite de grado {n}: {GetHermiteRecursive(n,x)}\n')
 
 #RAICES
 
@@ -81,7 +81,9 @@ def GetAllRootsGHer(n):
     
     return Roots
 
-print(GetAllRootsGHer(3))
+n=4
+print(f'Ejercicio 3.2.2\nRaices del polinomio de Hermite de grado {n}: {GetAllRootsGHer(n)}\n')
+
 
 def GetWeightsGHer(n):
 
@@ -97,11 +99,13 @@ def GetWeightsGHer(n):
     poly = sym.lambdify([x],Hermite[n-1],'numpy')
     Weights = []
     for root in Roots:
-        Weights.append( (2**(n-1))*np.math.factorial(n)*np.sqrt(np.pi) / ((n**2) * poly(root)**2) )
+        Weights.append(np.round((2**(n-1))*np.math.factorial(n)*np.sqrt(np.pi) / ((n**2) * poly(root)**2), 8))
     
     return Weights
 
-print(GetWeightsGHer(4))
+n=4
+print(f'Ejercicio 3.2.3\nPesos del polinomio de Hermite de grado {n}: {GetWeightsGHer(n)}\n')
+
 
 #INTEGRAL -INF A INF
 
@@ -115,12 +119,22 @@ def Integral_GH(funcion, n):
         suma += pesos[i] * funcion_corregida(raices[i])
     return suma
 
+def Integral_GH_corta(funcion, n):
+    # Más rápida. Usa los pesos y raices dados por numpy
+    def funcion_corregida(x):
+        return funcion(x) * np.exp(x**2)
+    raices,pesos = np.polynomial.hermite.hermgauss(n)
+    suma = 0
+    for i in range(n):
+        suma += pesos[i] * funcion_corregida(raices[i])
+    return suma
 
-
-def linea(x):
+def funct(x):
     return np.exp(-(x**2))
 
-print(Integral_GH(linea, 4))
+print(f'Ejemplo con la función e^(-(x^2)):')
+print(Integral_GH(funct, 6))
+#print(Integral_GH_corta(funct, 6))
 
 
 

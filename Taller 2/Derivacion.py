@@ -27,6 +27,8 @@ I = (-1/R)*derivada_central(flujo_magnetico, X, h)
 
 #GRÁFICA
 plt.plot(X, I, color = 'black', label = 'Corriente inducida')
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Corriente (A)")
 plt.legend()
 plt.show()
 
@@ -45,33 +47,6 @@ def GetNewtonMethod(f,df,xn,itmax=100000,precision=1e-5):
         xn=xn1
         it+=1
     return xn
-
-
-
-""" def roots_each_x(X, newtonmethod, f, df, err, n_raices):
-    roots = []
-    real_roots = []
-    centinela = True
-    while centinela: 
-        if len(real_roots)<=n_raices:
-            for x in X:
-                root = newtonmethod(f, df, x)
-                roots.append(root)
-            
-            root_i = roots[0]
-            real_roots.append(root_i)
-            for root in roots[1:]:
-                difference = root_i-root
-                if not np.abs(difference)<err:
-                    real_roots.append(root_i)
-                root_i= root
-        else:
-            centinela = False
-    i=0        
-    for y in df:
-        if np.abs(y)<err and X[i]>start:
-            real_roots.append(X[i])
-    return real_roots """
 
 def roots_each_x(X, start, f, erry, errx, n_raices):
     ###Esta tomando el primer dato que cumple la condicion para cada raiz<
@@ -95,4 +70,4 @@ def roots_each_x(X, start, f, erry, errx, n_raices):
 
 #RAICES
 raices = roots_each_x(X, 0, I, 0.005, 0.01, 3)
-print(raices)
+print(f'La corriente es aproximadamente 0 en los segundos: {raices}')
