@@ -25,10 +25,15 @@ n=4
 print(f'Ejercicio 3.1.1\n Polinomio de laguerre de grado {n}: {GetLaguerreRecursive(n,x)}\n')
 
 #RAICES
+def GetLaguerreDirect(n, x):
+    Laguerre = [sym.Pow(1,1), 1-x]
+    for i in range(2,n+2):
+        Poly = ((2*i-1-x)*Laguerre[i-1]-(i-1)*Laguerre[i-2])/i
+        Laguerre.append(sym.simplify(Poly))
+    return Laguerre
 
-def GetDLaguerre(n,x):
-    Pn = GetLaguerreRecursive(n,x)
-    return sym.diff(Pn,x,1)
+def GetDLaguerre(poly,x):
+    return sym.diff(poly,x,1)
 
 def GetNewton(f,df,xn,itmax=10000,precision=1e-10):
     ##revisar precision ######
@@ -71,24 +76,25 @@ def GetRootsGLag(f,df,x,tolerancia = 11):
     
     return Roots
 
+
+
 def GetAllRootsGLag(n):
     a = 0
     b = n+(n-1)*np.sqrt(n)
     xn = np.linspace(a,b,100)
     
-    Laguerre = []
+    Laguerre = GetLaguerreDirect(n,x)
     DLaguerre = []
     
-    for i in range(n+1):
-        Laguerre.append(GetLaguerreRecursive(i,x))
-        DLaguerre.append(GetDLaguerre(i,x))
+    for poly in Laguerre:
+        DLaguerre.append(GetDLaguerre(poly,x))
     
     poly = sym.lambdify([x],Laguerre[n],'numpy')
     Dpoly = sym.lambdify([x],DLaguerre[n],'numpy')
     Roots = GetRootsGLag(poly,Dpoly,xn)
     
     return Roots
-n=4
+n=15
 print(f'Ejercicio 3.1.2\n Raices del polinomio de Laguerre de grado {n}: {GetAllRootsGLag(n)}\n')
 
 def GetWeightsGLag(n):
