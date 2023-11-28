@@ -64,11 +64,11 @@ k33 = -2
 
 print(f'Tomemos\nm1 = {m1}, m2 = {m2}, m3 = {m3},\nk11 = {k11},k12 = {k12}, k13 = {k13},\nk21 = {k21}, k22 = {k22}, k23 = {k23},\nk31 = {k31}, k32 = {k32}, k33 = {k33}')
 A = np.array([[k11/m1,k12/m2,k13/m3],[k21/m1,k22/m2,k23/m3],[k31/m1,k32/m2,k33/m3]], dtype='float64')
+
 max_fr, max_amp = MaxEigenValue(A,z)
 min_fr, min_amp = MinEigenValue(A,z)
+
 max_fr = np.sqrt((-1)*max_fr)
 min_fr = np.sqrt((-1)*min_fr)
 
 print(f'Máxima frecuencia: {max_fr} Hz\nMínima frecuencia: {min_fr} Hz\nMáxima amplitud:\n{max_amp} \nMínima amplitud:\n{min_amp} ')
-
-        
