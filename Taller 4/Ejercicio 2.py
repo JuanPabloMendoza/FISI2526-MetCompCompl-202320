@@ -25,7 +25,7 @@ Caso1 = [5,1]
 Caso2 = [25,5]
 N =int(1e3)
 Caso = np.array([Caso1,Caso2])
-#GraphBin(Caso,N)
+GraphBin(Caso,N)
 
 #a
 a = 0
@@ -38,21 +38,38 @@ print(f'Primer plan: {Plan1}')
 f2 = lambda x: Binomial(Caso2[0],x,Caso2[1])
 Plan2 = integrate.quad(f2,a,b, full_output=1)[0]/integrate.quad(f2,0,1, full_output=1)[0]
 print(f'Segundo plan: {Plan2}')
-print(f'Es mejor opción el plan 1')
+if Plan1>Plan2:
+    print(f'Es mejor opción el plan 1')
+else:
+    print(f'Es mejor opción el plan 2')
 
 #b
+
 a = 0
 b = 0.3
-f1 = lambda x: Binomial(Caso1[0],x,Caso1[1])
 
+Plan1 = Binomial(Caso1[0],0.3,Caso1[1])
+Plan2 = Binomial(Caso2[0],0.3,Caso2[1])
+print(f'\nPrimer plan: {Plan1}')
+print(f'Segundo plan: {Plan2}')
+if Plan1<Plan2:
+    print(f'Es mejor opción el plan 1')
+else:
+    print(f'Es mejor opción el plan 2')
+    
+    
+""" f1 = lambda x: Binomial(Caso1[0],x,Caso1[1])
 Plan1 = integrate.quad(f1,a,b, full_output=1)[0]/integrate.quad(f1,0,1, full_output=1)[0]
 print(f'Primer plan: {Plan1}')
 
 f2 = lambda x: Binomial(Caso2[0],x,Caso2[1])
 Plan2 = integrate.quad(f2,a,b, full_output=1)[0]/integrate.quad(f2,0,1, full_output=1)[0]
 print(f'Segundo plan: {Plan2}')
-print(f'Es mejor opción el plan 1')
-
+if Plan1<Plan2:
+    print(f'Es mejor opción el plan 1')
+else:
+    print(f'Es mejor opción el plan 2')
+ """
 
 #2
 def Poisson1(lam,a,N=int(1e4)):
@@ -62,7 +79,7 @@ def Poisson1(lam,a,N=int(1e4)):
 
 def Poisson2(lam,a,N = int(1e4)):
     Eventos = np.random.poisson(lam,N)
-    Pedido = Eventos[Eventos>a]
+    Pedido = Eventos[Eventos>=a]
     return Pedido.size/N
 
 lam = 1

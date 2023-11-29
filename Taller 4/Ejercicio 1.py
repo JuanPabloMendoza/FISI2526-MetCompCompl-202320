@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-""" Baraja = list(range(1,53))
-N=int(1e7)
+Baraja = list(range(1,53))
+N=int(1e4)
 
 def GetSample(Events, N = int(1e5), ncartas = 5, Weights = None):
     Sample = np.zeros((N,ncartas))
@@ -87,22 +87,42 @@ for i in range(Sample.shape[0]):
 
 Prob3 = frecuencia/N
 print(f'c: Si las primeras 4 cartas son espadas, la probabilidad de que la siguiente carta también sea espada es de {Prob3}')
- """
+
 #2
 N = int(1e6)
-ProbGripe = 0.6
+ProbExp = 0.6
 
-ProbVacuna = np.random.randint(0,N)/N
 ProbGripaSinVacuna = 0.9
 ProbNoGripaConVacuna = 0.8
-ProbGripaConVacuna = 1-ProbNoGripaConVacuna
+ProbNoGripaSinVacuna = 1 - ProbGripaSinVacuna
+ProbGripaConVacuna = 1 - ProbNoGripaConVacuna
 
-PersonasConGripe = np.array([[1,0]]*N*ProbGripe)
-PersonasSinGripe = np.array([[0,0]]*(N-N*ProbGripe))
+PersonasConVacuna = np.array([[1,0,0]]*N)
+PersonasSinVacuna = np.array([[0,0,0]]*N)
 
-PersonasConGripe[:int(PersonasConGripe*ProbGripaConVacuna),1] = 1
+PersonasConVacuna[:int(N*ProbExp),1] = 1
+PersonasSinVacuna[:int(N*ProbExp),1] = 1
+
+PersonasConVacuna[:int(N*ProbExp*ProbGripaConVacuna),2] = 1
+PersonasSinVacuna[:int(N*ProbExp*ProbGripaSinVacuna),2] = 1
 
 
+Personas = np.vstack((PersonasConVacuna,PersonasSinVacuna))
+np.random.shuffle(Personas)
+print(2)
 
+n=int(1e4)
+Seleccion = Personas[:n]
+ContNoGripaConVacuna=0
+ContNoGripaSinVacuna=0
+print(Seleccion)
+for persona in Seleccion:
+    if persona[0] == 1 and persona[1]==1 and persona[2]==0:
+        ContNoGripaConVacuna+=1
+    elif persona[0] == 0 and persona[1]==1 and persona[2]==0:
+        ContNoGripaSinVacuna+=1
+P1 = ContNoGripaConVacuna/n
+P2 = ContNoGripaSinVacuna/n
+print(1-P1*P2)
 
 
