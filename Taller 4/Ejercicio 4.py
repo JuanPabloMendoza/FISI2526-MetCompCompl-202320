@@ -38,7 +38,7 @@ GenTraducido = 'A,C,G,A,G,U,U,U'
 Observado = np.array([A,C,G,A,G,U,U,U])
 for i in range(Observado.size):
     Prob *= E[Observado[i],Deseado[i]]
-print(Prob)
+
 print(f'La probabilidad de que el gen traducido {GenTraducido} provenga del gen {GenDeseado} es {Prob}')
 
 

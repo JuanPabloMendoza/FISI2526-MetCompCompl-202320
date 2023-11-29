@@ -4,6 +4,7 @@ import scipy.integrate as integrate
 
 
 #1
+print(f'1:')
 def Binomial(n,p,a, N=int(1e4)):
     Evento = np.random.binomial(n,p,N)
     Pedido = Evento[Evento<=a]
@@ -57,27 +58,14 @@ if Plan1<Plan2:
 else:
     print(f'Es mejor opción el plan 2')
     
-    
-""" f1 = lambda x: Binomial(Caso1[0],x,Caso1[1])
-Plan1 = integrate.quad(f1,a,b, full_output=1)[0]/integrate.quad(f1,0,1, full_output=1)[0]
-print(f'Primer plan: {Plan1}')
-
-f2 = lambda x: Binomial(Caso2[0],x,Caso2[1])
-Plan2 = integrate.quad(f2,a,b, full_output=1)[0]/integrate.quad(f2,0,1, full_output=1)[0]
-print(f'Segundo plan: {Plan2}')
-if Plan1<Plan2:
-    print(f'Es mejor opción el plan 1')
-else:
-    print(f'Es mejor opción el plan 2')
- """
 
 #2
-def Poisson1(lam,a,N=int(1e4)):
+def Poisson1(lam,a,N=int(1e6)):
     Eventos = np.random.poisson(lam,N)
     Pedido = Eventos[Eventos==a]
     return Pedido.size/N
 
-def Poisson2(lam,a,N = int(1e4)):
+def Poisson2(lam,a,N = int(1e6)):
     Eventos = np.random.poisson(lam,N)
     Pedido = Eventos[Eventos>=a]
     return Pedido.size/N
@@ -88,7 +76,7 @@ lam = 1
 N=50
 lim = 0.01
 for i in range(N):
-    Prob = Poisson2(lam, i)
+    Prob = Poisson2(lam, i) #si en esta funcion la condicion fuese solo '>', el resultado seria 4.
     if Prob<lim:
         break
 print(f'El menor valor de n tal que la probabilidad de que haya al menos n desconexiones en menos de un período de 4 horas es menor que {lim} es {i}')
@@ -102,11 +90,11 @@ for i in range(H):
 print(f'El menor valor del número de horas h tal que la probabilidad de que no haya desconexiones en h horas sea menor que 0.02 es de {i}')
 
 #c
-ProbDesconexionPeriodo = Poisson2(lam,0)
+ProbDesconexionPeriodo = Poisson2(lam,1)
 ProbNoDesconexionPeriodo = Poisson1(lam,0)
 Prob = (ProbNoDesconexionPeriodo*ProbDesconexionPeriodo**2)*3
 
-print(f'La probabilidad de que en 3 períodos consecutivos de 4 horas, haya solamente un período de 4 horas sin desconexiones es de {Prob}.')
+print(f'La probabilidad de que en 3 períodos consecutivos de 4 horas, haya solamente un período de 4 horas sin desconexiones es de {np.round(Prob,4)}.')
 
 
 #d
